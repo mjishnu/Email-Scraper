@@ -1,15 +1,19 @@
 from itertools import tee
-
+import re
 
 def scrap(wrds):
-    s = set()
+    if isinstance(wrds, str):
+        wrds = wrds.split(' ')
+    data = set()
+    pattern = re.compile(r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+')
     for wrd in wrds:
-        splited_wrd = wrd.split(' ')
-        for i in range(len(splited_wrd)):
-            wrds_indexed = splited_wrd[i]
-            if ('@' in wrds_indexed and '.' in wrds_indexed) and (len(wrds_indexed) > 7):
-                s.add(wrds_indexed)
-    yield from s
+        matches = pattern.search(str(wrd))
+        try:
+            data.add(matches.group(0))
+        except AttributeError:
+            pass
+    yield from data
+
 
 
 def files():
